@@ -1,0 +1,101 @@
+<?php
+ 
+
+$query=mysqli_query($db,"SELECT * FROM `fire1`")or die(mysqli_error($db));
+$row=mysqli_fetch_assoc($query);
+
+
+$t=$row['t'];
+$f=$row['f'];
+$p=$row['p'];
+
+if($t==1)
+{
+    $status="Fire Detected at zone 1";
+}
+else if($f==1)
+{
+    $status="Fire Detected at zone 2";
+}
+else if($p==1)
+{
+    $status="Fire Detected at zone 3";
+}
+else
+{
+    $status="Normal";
+    
+}
+
+if($t==1)
+{
+    $t="High";
+}
+else
+{
+    $t="Low";
+}
+if($p==1)
+{
+    $p="High";
+}
+else
+{
+    $p="Low";
+}
+
+if($f==1)
+{
+    $f="High";
+}
+else
+{
+    $f="Low";
+}
+
+?>
+
+
+<html>
+<meta http-equiv="refresh" content="9">
+<link href="index.css" type="text/css" rel="stylesheet"/>
+<head>   <style>
+	.blink{
+		color: #fff;
+		 font-size: 50px;
+		padding: 70px;
+		display: inline-block;
+		border-radius: 5px;
+		animation: blinkingBackground 2s infinite;
+	}
+	@keyframes blinkingBackground{
+		0%		{ background-color: #10c018;}
+		25%		{ background-color: #1056c0;}
+		50%		{ background-color: #ef0a1a;}
+		75%		{ background-color: #254878;}
+		100%	      { background-color: #04a1d5;}
+	}
+</style>
+ </head>
+<title>Fire Monitoring System</title>
+<body>
+	<label2><center><h2>&nbsp&nbsp&nbsp&nbsp&nbsp Fire Monitoring System</h2></center></label2>
+	<div class="container">
+		<label1><h4>Parameter Values:</h4></label1>
+			<label>Fire Zone 1</label><?php echo ":   ".$t."";?><br><br>
+			<label>Fire Zone 2</label><?php echo ":   ".$f." ";?><br><br>
+			<label>Fire Zone 3</label><?php echo ":   ".$p." ";?><br><br>
+			<label>Status</label><?php echo ":   ".$status." ";?><br><br>
+		  <?php
+   if($status!="Normal")
+	{
+	
+	echo "<label1>
+	<p class=\"blink\">$status </p></label1><br><br><br><br>";
+	
+	    
+	}
+	?>
+		</div>
+</body>
+</html>

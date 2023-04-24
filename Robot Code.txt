@@ -1,0 +1,574 @@
+#include <Servo.h>
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(8,9,4,5,6,7);
+
+int z1, z2, z3=0;
+Servo myservo;
+
+//#include <SoftwareSerial.h>
+//SoftwareSerial ESP11 = SoftwareSerial(2,3); // RX, TX
+#define DEBUG true  
+
+// WIFI SHIELD DECLARATION
+String ssid = "wifi001";
+String pass = "12345678";
+String tcp = "\"TCP\"";
+String remoteip = "iotproject21-22.000webhostapp.com";
+String portnum = "80";
+
+int lvl=0;
+float distance=0;
+float duration=0;
+
+int trig=A3;
+int echo=A4;
+void setup() {
+  
+  Serial.begin(115200);
+  
+  myservo.attach(3);
+  
+  myservo.write(90); 
+  
+  lcd.begin(16,2);
+  lcd.setCursor(0,0);
+  lcd.print("Fire Detection");
+  pinMode(10,OUTPUT);
+  pinMode(11,OUTPUT);
+  pinMode(12,OUTPUT);
+  pinMode(13,OUTPUT);
+  pinMode(2,OUTPUT);
+  digitalWrite(10,LOW);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
+  digitalWrite(13,LOW);
+  digitalWrite(2,LOW);
+  
+  
+  pinMode(trig,OUTPUT);
+  digitalWrite(trig,LOW);
+  
+  pinMode(echo,INPUT);
+  
+  
+  
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("  Loading!....");
+  sendData("AT+CWMODE=3\r\n",2,DEBUG); // configure as access point and Client
+ lcd.setCursor(0,1);
+  lcd.print("      20%   ");
+  sendData("AT+GMR\r\n",2,DEBUG); // View version Info
+ lcd.setCursor(0,1);
+  lcd.print("      40%   ");
+  
+  sendData("AT+CWLAP\r\n",3,DEBUG); // List all available AP's*/
+  lcd.setCursor(0,1);
+  lcd.print("      60%  ");
+  
+  sendData("AT+CWJAP=" + ssid + "," + pass + "\r\n",3,DEBUG); // Connect to AP
+ 
+  lcd.setCursor(0,1);
+  lcd.print("      90%   ");
+  sent();
+    sent();
+      
+}
+
+void loop() {
+ultrasonic();
+z1=0;
+z2=0;
+z3=0;
+
+if((!digitalRead(A0)))
+{
+  z1=1;
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Fire Detected");
+  
+  lcd.setCursor(0,1);
+  lcd.print("  Zone 1");
+  digitalWrite(2,HIGH);
+  sent();
+ if(distance<30)
+ { 
+   
+  left();
+  delay(3000);
+  stp();
+  delay(2000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  right();
+  delay(3000);
+  stp();
+  delay(2000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  right();
+  delay(3000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  left();
+  delay(3000);
+  
+  digitalWrite(2,HIGH);
+    for(int i=0;i<1;i++)
+  {
+   forward();
+  delay(2000);
+  stp();
+ 
+  myservo.write(30);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(120);
+  delay(500);
+  myservo.write(150);
+  delay(500);
+  myservo.write(120);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(90);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(30);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  }
+  digitalWrite(2,LOW);
+ }
+ else
+ {
+
+  digitalWrite(2,HIGH);
+  for(int i=0;i<1;i++)
+  {
+   forward();
+  delay(2000);
+  stp();
+ 
+  myservo.write(30);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(120);
+  delay(500);
+  myservo.write(150);
+  delay(500);
+  myservo.write(120);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(90);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(30);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  }
+  digitalWrite(2,LOW);
+ 
+  }
+  sent();
+  sent();
+  }
+  
+else if((!digitalRead(A1)))
+{
+  
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Fire Detected");
+  
+  lcd.setCursor(0,1);
+  lcd.print("Zone 2");
+  digitalWrite(2,HIGH);
+ z2=1;
+ sent();
+ 
+ if(distance<30)
+ { 
+   
+  left();
+  delay(3000);
+  stp();
+  delay(2000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  right();
+  delay(3000);
+  stp();
+  delay(2000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  right();
+  delay(3000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  left();
+  delay(3000);
+  
+  digitalWrite(2,HIGH);
+    for(int i=0;i<1;i++)
+  {
+   left();
+  delay(2000);
+  stp();
+  delay(2000);
+   forward();
+  delay(2000);
+  stp();
+ 
+  myservo.write(30);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(120);
+  delay(500);
+  myservo.write(150);
+  delay(500);
+  myservo.write(120);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(90);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(30);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  }
+  digitalWrite(2,LOW);
+ }
+ else
+ {
+
+  digitalWrite(2,HIGH);
+  for(int i=0;i<1;i++)
+  {
+   left();
+  delay(2000);
+  stp();
+  delay(2000);
+ 
+   forward();
+  delay(2000);
+  stp();
+ 
+  myservo.write(30);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(120);
+  delay(500);
+  myservo.write(150);
+  delay(500);
+  myservo.write(120);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(90);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(30);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  }
+  digitalWrite(2,LOW);
+ 
+  }
+  sent();
+  sent();
+  }
+  
+else if((!digitalRead(A2)))
+{
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Fire Detected");
+  
+  lcd.setCursor(0,1);
+  lcd.print("Zone 3");
+ 
+  digitalWrite(2,HIGH);
+ 
+ z3=1;
+ sent();
+ if(distance<30)
+ { 
+   
+  left();
+  delay(3000);
+  stp();
+  delay(2000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  right();
+  delay(3000);
+  stp();
+  delay(2000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  right();
+  delay(3000);
+  forward();
+  delay(5000);
+  stp();
+  delay(2000);
+  left();
+  delay(3000);
+  
+  digitalWrite(2,HIGH);
+    for(int i=0;i<1;i++)
+  {
+   right();
+  delay(2000);
+  stp();
+  delay(2000);
+   forward();
+  delay(2000);
+  stp();
+ 
+  myservo.write(30);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(120);
+  delay(500);
+  myservo.write(150);
+  delay(500);
+  myservo.write(120);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(90);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(30);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  }
+  digitalWrite(2,LOW);
+ }
+ else
+ {
+
+  digitalWrite(2,HIGH);
+  for(int i=0;i<1;i++)
+  {
+   right();
+  delay(2000);
+  stp();
+  delay(2000);
+ 
+   forward();
+  delay(2000);
+  stp();
+ 
+  myservo.write(30);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(120);
+  delay(500);
+  myservo.write(150);
+  delay(500);
+  myservo.write(120);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(90);
+  delay(500);
+  myservo.write(60);
+  delay(500);
+  myservo.write(30);
+  delay(500);
+  forward();
+  delay(2000);
+  stp();
+  myservo.write(60);
+  delay(500);
+  myservo.write(90);
+  delay(500);
+  }
+  digitalWrite(2,LOW);
+ 
+  }
+  sent();
+  sent();
+  }
+  else
+  {
+  z1=0;z2=0;z3=0;
+  sent();
+    
+    }
+  delay(2000);
+}
+   
+
+void left()
+{
+  digitalWrite(10,HIGH);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
+  digitalWrite(13,HIGH);
+  
+  }
+  
+void right()
+{
+  digitalWrite(11,HIGH);
+  digitalWrite(10,LOW);
+  digitalWrite(13,LOW);
+  digitalWrite(12,HIGH);
+  
+  }
+  
+void forward()
+{
+  digitalWrite(10,HIGH);
+  digitalWrite(11,LOW);
+  digitalWrite(12,HIGH);
+  digitalWrite(13,LOW);
+  
+  }
+  
+void stp()
+{
+  digitalWrite(10,LOW);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
+  digitalWrite(13,LOW);
+  }
+ void ultrasonic()
+{
+  digitalWrite(trig,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig,LOW);  
+  duration=pulseIn(echo,HIGH);
+  distance=duration*.017;
+  
+   lcd.clear();
+   lcd.setCursor(0,0);
+   lcd.print("D:");
+  lcd.setCursor(3,0);
+  lcd.print("   ");
+  
+  lcd.setCursor(3,0);
+  lcd.print(distance);
+  delay(1000);
+  
+}
+
+
+String sendData(String command, const int timeout, boolean debug)
+{
+
+    String response = ""; // ESP8266 sendData String
+    Serial.print(command); // send the read character to the esp8266
+
+}
+
+void sent()
+{
+  String getStr = "GET http://iotproject21-22.000webhostapp.com/firedt/update.php?t="; // Getting info from my online database through my getStr+=z1;
+  getStr+="f=";
+  getStr+=z2;
+  getStr+="p=";
+  getStr+=z3;
+ }
